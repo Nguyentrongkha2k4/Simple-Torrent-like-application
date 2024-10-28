@@ -76,21 +76,21 @@ class StartPage(tk.Frame):
         # set color modepython
         customtkinter.set_default_color_theme("blue")
         # create title
-        self.page_title = customtkinter.CTkLabel(self, text="File sharing service", font=("Arial Bold", 36))
+        self.page_title = customtkinter.CTkLabel(self, text="FILE TRANFERING SERVICES", font=("Arial Bold", 36))
         self.page_title.pack(padx=10, pady=(80, 10))
         # set port label
         self.port_label = customtkinter.CTkLabel(self, text="Nhập giá trị port trong khoảng (1024 -> 65535)", font=("Arial", 20))
         self.port_label.pack(padx=10, pady=10)
         # set port entry
-        self.port_entry = customtkinter.CTkEntry(self, placeholder_text="Nhập port number", border_width=1,width=250)
+        self.port_entry = customtkinter.CTkEntry(self, placeholder_text="port...", border_width=1,width=250)
         self.port_entry.pack(padx=10, pady=10)
         # create a register button
-        self.register_button = customtkinter.CTkButton(self, text="Đăng ký", command=lambda: 
-                                self.enter_app(controller=controller, port=self.port_entry.get(), page=RegisterPage),fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"))
+        self.register_button = customtkinter.CTkButton(self, text="Đăng ký", text_color="#000000", command=lambda: 
+                                self.enter_app(controller=controller, port=self.port_entry.get(), page=RegisterPage),fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12))
         self.register_button.pack(padx=10, pady=10)
         # create a login button
-        self.login_button = customtkinter.CTkButton(self, text="Đăng nhập", command=lambda: 
-                                self.enter_app(controller=controller, port=self.port_entry.get(), page=LoginPage),fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"))
+        self.login_button = customtkinter.CTkButton(self, text="Đăng nhập", text_color="#000000", command=lambda: 
+                                self.enter_app(controller=controller, port=self.port_entry.get(), page=LoginPage),fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12))
         self.login_button.pack(padx=10, pady=10)
 
     def enter_app(self, controller, port, page):
@@ -130,7 +130,7 @@ class RegisterPage(tk.Frame):
         self.frame = customtkinter.CTkFrame(master=self, fg_color="white")
         self.frame.pack(fill='both', expand=True)
 
-        self.title_label = customtkinter.CTkLabel(self.frame, text="Đăng ký tài khoản", font=("Roboto Bold", 32))
+        self.title_label = customtkinter.CTkLabel(self.frame, text="ĐĂNG KÝ", font=("Roboto Bold", 32))
         self.title_label.pack(pady=(80, 10),padx=10)
 
         self.username = customtkinter.CTkLabel(self.frame, text="Tài khoản", font=("Roboto", 14))
@@ -142,13 +142,14 @@ class RegisterPage(tk.Frame):
         self.password.pack(pady=(0),padx=10)
         self.password_entry = customtkinter.CTkEntry(self.frame, placeholder_text="Nhập mật khẩu",  width=250,font=("Roboto", 12), show = '*')
         self.password_entry.pack(pady=(0, 10),padx=10)
-
+        # toggle_btn = ttk.Button(self.frame, text="Hiện mật khẩu", command=self.toggle_password)
+        # toggle_btn.pack(pady=10)
         # Submit
-        customtkinter.CTkButton(self.frame, text='Đăng ký', fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"),command=lambda: 
+        customtkinter.CTkButton(self.frame, text='Đăng ký', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12),command=lambda: 
                                 self.register_user(self.username_entry.get(), self.password_entry.get())).pack(pady=(0, 10),padx=10)
                                                                                                             
         customtkinter.CTkLabel(self.frame, text="Đã có tài khoản ?",font=("Roboto", 11)).pack(pady=(10, 0),padx=10)
-        customtkinter.CTkButton(self.frame, text='Đăng nhập', fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"),command=lambda: controller.show_frame(LoginPage)).pack(pady=(0, 10),padx=1)
+        customtkinter.CTkButton(self.frame, text='Đăng nhập', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12),command=lambda: controller.show_frame(LoginPage)).pack(pady=(0, 10),padx=1)
 
     def register_user(self, username, password):
         network_peer.name = str(username)
@@ -157,7 +158,14 @@ class RegisterPage(tk.Frame):
         self.username_entry.delete(0, customtkinter.END)
         self.password_entry.delete(0, customtkinter.END)
         network_peer.send_register()
-
+    # def toggle_password():
+    #     # Kiểm tra trạng thái hiện tại của ô nhập mật khẩu
+    #     if password_entry.cget('show') == '*':
+    #         password_entry.config(show='')  # Hiển thị mật khẩu
+    #         toggle_btn.config(text="Ẩn mật khẩu")
+    #     else:
+    #         password_entry.config(show='*')  # Ẩn mật khẩu
+    #         toggle_btn.config(text="Hiện mật khẩu")
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -433,7 +441,7 @@ class RepoPage(tk.Frame):
 # ------ end of GUI ------- #
 
 class NetworkPeer(Base):
-    def __init__(self, serverhost='localhost', serverport=30000, server_info=('192.168.31.170', 40000)):
+    def __init__(self, serverhost='192.168.31.170', serverport=30000, server_info=('192.168.31.170', 40000)):
         super(NetworkPeer, self).__init__(serverhost, serverport)
 
         # init host and port of central server
@@ -767,7 +775,7 @@ class NetworkPeer(Base):
 # ------ app run ---------- #
 if __name__ == "__main__":
     app = tkinterApp()
-    app.title('P2P File Sharing')
+    app.title('Simple Torrent-like Application')
     app.geometry("1024x600")
     app.resizable(False, False)
 

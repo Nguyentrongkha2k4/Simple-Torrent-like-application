@@ -162,7 +162,7 @@ class App(customtkinter.CTk):
 
 
 class CentralServer(Base):
-    def __init__(self, serverhost='localhost', serverport=40000):
+    def __init__(self, serverhost, serverport=10000):
         super(CentralServer, self).__init__(serverhost, serverport)
 
         # get registered user list

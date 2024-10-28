@@ -7,7 +7,7 @@ FORMAT = "utf-8"
 BUFFER_SIZE = 2048
 
 class Base():
-    def __init__(self, serverhost='localhost', serverport=10000, listen_num=100):
+    def __init__(self, serverhost, serverport=10000, listen_num=100):
         # host and listening port of network peers/central server
         hostname = socket.gethostname()   
         self.serverhost = socket.gethostbyname(hostname)  
