@@ -293,7 +293,7 @@ class RepoPage(tk.Frame):
                 status = []
                 for i in range(num_pieces):
                     status.append(1)
-                network_peer.updateToServer(file_name, file_path)
+                network_peer.updateToServer(file_name, file_path, status)
                 self.fileListBox.insert(0,file_name + "(" + file_path +")")
                 self.sendtoServerPath(file_path)
                 
@@ -368,7 +368,7 @@ class RepoPage(tk.Frame):
         status = []
         for i in range(num_pieces):
             status.append(1)
-        network_peer.updateToServer(self.fileNameServer, file_path)
+        network_peer.updateToServer(self.fileNameServer, file_path, status)
         self.fileListBox.delete(tk.ANCHOR)
         self.fileListBox.insert(0,self.fileNameServer + "(" + file_path +")")
 
