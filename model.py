@@ -98,12 +98,12 @@ def delete_user(username):
     client.close()
     return True
 
-def add_new_file(username, filename, filepath):
+def add_new_file(username, filename, filepath, status = []):
     client = connect_mongodb()
     database = client['networkapp']
     collection = database['users']
     userdata = collection.find_one({'username': username})
-    userdata.get('filename').append({'filename': filename, 'filepath': filepath})
+    userdata.get('filename').append({'filename': filename, 'filepath': filepath, 'status': status})
     collection.update_one({'_id': userdata.get('_id')}, {'$set': userdata})
     client.close()
     return True
@@ -122,7 +122,7 @@ def search_file_name(filename):
     client = connect_mongodb()
     database = client['networkapp']
     collection = database['users']
-    data = collection.find({'filename': {'$regex': filename}})
+    data = collection.find({'filename.filename':filename})
     user_list = []
     for user in data:
         user_list.append(user.get('username'))
@@ -150,3 +150,34 @@ def delete_all_users():
     collection.delete_many({})
     client.close()
     return True
+def get_path_by_filename(username, filename):
+    client = connect_mongodb()
+    database = client['networkapp']
+    collection = database['users']
+    path = collection.find_one({'username': username}).get('filename')
+    for file in path:
+        if file.get('filename') == filename:
+            return file.get('filepath')
+    client.close()
+    return ""
+def get_status_file(username, filename):
+    client = connect_mongodb()
+    database = client['networkapp']
+    collection = database['users']
+    path = collection.find_one({'username': username}).get('filename')
+    for file in path:
+        if file.get('filename') == filename:
+            return file.get('status')
+    client.close()
+    return []
+def update_status_file(username, filename, status = []):
+    client = connect_mongodb()
+    database = client['networkapp']
+    collection = database['users']
+    path = collection.find_one({'username': username}).get('filename')
+    for file in path:
+        if file.get('filename') == filename:
+            file.update({'status': status})
+    collection.update_one({'_id': collection.find_one({'username': username}).get('_id')}, {'$set': {'filename': path}})
+    client.close()
+    return

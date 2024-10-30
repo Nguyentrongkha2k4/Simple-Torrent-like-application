@@ -162,7 +162,7 @@ class App(customtkinter.CTk):
 
 
 class CentralServer(Base):
-    def __init__(self, serverhost, serverport=10000):
+    def __init__(self, serverhost='localhost', serverport=40000):
         super(CentralServer, self).__init__(serverhost, serverport)
 
         # get registered user list
@@ -175,7 +175,7 @@ class CentralServer(Base):
 
         # manage online user list have file which have been searched
         self.shareList = {}
-
+        
         # Delete data in table online
         delete_all_onl_users()
         
@@ -258,15 +258,26 @@ class CentralServer(Base):
         peer_port = msgdata['port']
         file_name = msgdata['filename']
         user_list = search_file_name(file_name)
-
-        for peername in user_list:
-            if peername in self.onlineList:
-                self.shareList[peername] = self.onlineList[peername]
-
+        piece_have = get_status_file(peer_name, file_name)
+        self.max_same = 0
+        self.name_max_same = ""
+        def find_max_same():
+            for peername in user_list:
+                if peername in self.onlineList:
+                    self.shareList[peername] = self.onlineList[peername]
+                    piece_cur = get_status_file(peername, file_name)
+                    cur_same = 0
+                    for piece in piece_cur:
+                        if (piece_have == [] or piece_have) and piece == 1:
+                            cur_same += 1
+                    if cur_same > self.max_same:
+                        self.max_same = cur_same
+                        self.name_max_same = peername
+        find_max_same()
         data = {
-            'online_user_list_have_file': self.shareList
+            'online_user_list_have_file': self.shareList,
+            'rerest': self.name_max_same
         }
-
         self.client_send((peer_host, peer_port),
                          msgtype='LIST_USER_SHARE_FILE', msgdata=data)
         print(peer_name, " has been sent latest online user list have file!")
@@ -290,7 +301,8 @@ class CentralServer(Base):
         peer_name = msgdata['peername']
         file_name = msgdata['filename']
         file_path = msgdata['filepath']
-        add_new_file(peer_name, file_name, file_path)
+        status = msgdata['status']
+        add_new_file(peer_name, file_name, file_path, status)
     ## ===========================================================##
 
 
