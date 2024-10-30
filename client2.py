@@ -523,14 +523,16 @@ class NetworkPeer(Base):
     # Modify your get_users_share_file function to check if the list is empty and call file_not_found_notification
     def get_users_share_file(self, msgdata):
         shareList = msgdata.get('online_user_list_have_file', {})
-        
+        rerest = msgdata.get('rerest', {})
         if not shareList:
             self.file_not_found_notification(self.filename)
             return
 
         for peername, data in shareList.items():
             peer_host, peer_port = data
-            info = f"{peer_host},{peer_port}"
+            info = f"{peername},{peer_host},{peer_port}"
+            if peername == rerest:
+                info = f"rerest - " + info
             app.frames[RepoPage].peerListBox.insert(0, info)
 
 
