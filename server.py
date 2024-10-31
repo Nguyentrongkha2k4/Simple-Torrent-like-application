@@ -57,7 +57,7 @@ class App(customtkinter.CTk):
         # customtkinter.CTk.__init__(self, *args, **kwargs)
 
         # configure windows
-        self.title("Upload files service")
+        self.title("Server management")
         self.geometry(f"{1100}x{580}")
         self.configure(bg="red")
         # configure grid layout (3x?)
@@ -75,7 +75,7 @@ class App(customtkinter.CTk):
         ## to do: add clients to this frame
       
         self.scrollable_clients_frame = customtkinter.CTkScrollableFrame(self, label_text="Clients",fg_color="#DBE2EF",label_text_color="#3F72AF",label_font=("Clients",25))
-        self.scrollable_clients_frame.grid(row = 1, column = 0, columnspan = 2, rowspan=4, padx=(10, 10), pady=(10, 10), sticky="nsew")
+        self.scrollable_clients_frame.grid(row = 1, column = 0, columnspan = 2, rowspan=5, padx=(10, 10), pady=(10, 10), sticky="nsew")
         self.scrollable_clients_frame.grid_columnconfigure((0), weight=1)
         self.scrollable_clients_names = get_all_users()
         self.scrollable_clients_labels = []
@@ -96,16 +96,18 @@ class App(customtkinter.CTk):
             ping_button.grid(row=i, column=3, padx=10, pady=(0, 20))
 
         # create CLI
-
+        self.refesh_client_frame_button = customtkinter.CTkButton(master=self, text="Làm mới", command = lambda:self.refresh_frame(), fg_color="#192655", border_width=2)
+        self.refesh_client_frame_button.grid(row=2, column=2, padx=(10, 10), pady=(10, 0), sticky="nsew")
+        
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Command...")
         self.entry.grid_columnconfigure(0, weight=0)
-        self.entry.grid(row=2, column=2, padx=(10, 10), pady=(20, 0))
+        self.entry.grid(row=3, column=2, padx=(10, 10), pady=(20, 0))
         # login_button = ttk.Entry(self, placeholder_text="Command...")
         # login_button.grid(column=0, row=5, sticky=tkinter.W, padx=5, pady=5)
         self.main_button_1 = customtkinter.CTkButton(master=self, text="Enter", command = lambda:self.commandLine(command = self.entry.get()), fg_color="#192655", border_width=2)
-        self.main_button_1.grid(row=3, column=2, padx=(10, 10), pady=(10, 0), sticky="nsew")
+        self.main_button_1.grid(row=4, column=2, padx=(10, 10), pady=(10, 0), sticky="nsew")
         self.main_button_2 = customtkinter.CTkButton(master=self, text="Thoát", command=self.sidebar_button_event, fg_color="#192655", border_width=2,font=customtkinter.CTkFont(size=15, weight="bold"))
-        self.main_button_2.grid(row=4, column=2, padx=(10, 10), pady=(10, 20), sticky="nsew")
+        self.main_button_2.grid(row=5, column=2, padx=(10, 10), pady=(10, 20), sticky="nsew")
         
 
     def change_scaling_event(self, new_scaling: str):
@@ -138,7 +140,13 @@ class App(customtkinter.CTk):
             else:
                 message = "Lệnh không hợp lệ vui lòng nhập lại!"
                 tkinter.messagebox.showinfo(message)
-
+        elif parts[0] == "delete":
+            if len(parts) == 2:
+                username = parts[1]
+                self.delete_user(username)
+            else:
+                message = "Lệnh không hợp lệ vui lòng nhập lại!"
+                tkinter.messagebox.showinfo(message)
         else:
             message = "Lệnh không hợp lệ vui lòng nhập lại!"
             tkinter.messagebox.showinfo(message)
@@ -164,13 +172,17 @@ class App(customtkinter.CTk):
     
     def delete_user(self, username):
         online_list = get_onl_users()
-        if username in online_list:
-            status_message = f"{username} đang online không thể xóa."
+        if check_user(username):
+            if username in online_list:
+                status_message = f"{username} đang online không thể xóa."
+            else:
+                delete_user(username)
+                status_message = f"{username} đã xóa."
+            tkinter.messagebox.showinfo("Trạng thái người dùng:", status_message)
+            self.refresh_frame()
         else:
-            delete_user(username)
-            status_message = f"{username} đã xóa."
-        tkinter.messagebox.showinfo("Trạng thái người dùng:", status_message)
-        self.refresh_frame()
+            status_message = f"{username} không tồn tại."
+            tkinter.messagebox.showinfo("Trạng thái người dùng:", status_message)
     # refesh frame after deleted user
     def refresh_frame(self):
         self.scrollable_clients_frame.destroy()

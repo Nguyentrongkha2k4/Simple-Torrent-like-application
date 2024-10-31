@@ -19,7 +19,15 @@ def get_user_password(username):
     data = collection.find_one({'username': username})
     client.close()
     return data.get('password')
-
+def check_user(username):
+    client = connect_mongodb()
+    database = client['networkapp']
+    collection = database['users']
+    data = collection.find_one({'username': username})
+    if data == None:
+        return False
+    else:
+        return True
 def get_user_file(username):
     client = connect_mongodb()
     database = client['networkapp']
