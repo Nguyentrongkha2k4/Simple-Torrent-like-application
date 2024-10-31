@@ -78,12 +78,12 @@ class StartPage(tk.Frame):
         self.port_entry = customtkinter.CTkEntry(self, placeholder_text="port...", border_width=1,width=250)
         self.port_entry.pack(padx=10, pady=10)
         # create a register button
-        self.register_button = customtkinter.CTkButton(self, text="Đăng ký", text_color="#000000", command=lambda: 
-                                self.enter_app(controller=controller, port=self.port_entry.get(), page=RegisterPage),fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12))
+        self.register_button = customtkinter.CTkButton(self, text="Đăng ký", command=lambda: 
+                                self.enter_app(controller=controller, port=self.port_entry.get(), page=RegisterPage),fg_color="#192655",font=customtkinter.CTkFont(size=12))
         self.register_button.pack(padx=10, pady=10)
         # create a login button
-        self.login_button = customtkinter.CTkButton(self, text="Đăng nhập", text_color="#000000", command=lambda: 
-                                self.enter_app(controller=controller, port=self.port_entry.get(), page=LoginPage),fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12))
+        self.login_button = customtkinter.CTkButton(self, text="Đăng nhập", command=lambda: 
+                                self.enter_app(controller=controller, port=self.port_entry.get(), page=LoginPage),fg_color="#192655",font=customtkinter.CTkFont(size=12))
         self.login_button.pack(padx=10, pady=10)
 
     def enter_app(self, controller, port, page):
@@ -133,11 +133,11 @@ class RegisterPage(tk.Frame):
         # self.toggle_btn = ttk.Button(self.frame, text="Hiện mật khẩu", command=self.toggle_password)
         # self.toggle_btn.pack(pady=5)
         # Submit
-        customtkinter.CTkButton(self.frame, text='Đăng ký', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12),command=lambda: 
+        customtkinter.CTkButton(self.frame, text='Đăng ký', fg_color="#192655",font=customtkinter.CTkFont(size=12),command=lambda: 
                                 self.register_user(self.username_entry.get(), self.password_entry.get())).pack(pady=(0, 10),padx=10)
                                                                                                             
         customtkinter.CTkLabel(self.frame, text="Đã có tài khoản ?",font=("Roboto", 11)).pack(pady=(10, 0),padx=10)
-        customtkinter.CTkButton(self.frame, text='Đăng nhập', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12),command=lambda: controller.show_frame(LoginPage)).pack(pady=(0, 10),padx=1)
+        customtkinter.CTkButton(self.frame, text='Đăng nhập', fg_color="#192655",font=customtkinter.CTkFont(size=12),command=lambda: controller.show_frame(LoginPage)).pack(pady=(0, 10),padx=1)
 
     def register_user(self, username, password):
         network_peer.name = str(username)
@@ -173,10 +173,10 @@ class LoginPage(tk.Frame):
         self.password_entry = customtkinter.CTkEntry(self.frame, placeholder_text="Nhập Mật khẩu",  width=250,font=("Roboto", 12), show = '*')
         self.password_entry.pack(pady=(0, 10),padx=10)
 
-        customtkinter.CTkButton(self.frame, text='Đăng nhập', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12), command=lambda:
+        customtkinter.CTkButton(self.frame, text='Đăng nhập', fg_color="#192655",font=customtkinter.CTkFont(size=12), command=lambda:
                                 self.login_user(username=self.username_entry.get(), password=self.password_entry.get())).pack(pady=(0, 10),padx=10)
         customtkinter.CTkLabel(self.frame, text="Bạn không có tài khoản ?", font=("Roboto", 11)).pack(pady=(10, 0),padx=10)
-        customtkinter.CTkButton(self.frame, text='Đăng ký', text_color="#000000", font=customtkinter.CTkFont(size=12),fg_color="#5B9CD4", cursor="hand2", command=lambda: controller.show_frame(RegisterPage)).pack(pady=(0, 10),padx=10)
+        customtkinter.CTkButton(self.frame, text='Đăng ký', font=customtkinter.CTkFont(size=12),fg_color="#192655", cursor="hand2", command=lambda: controller.show_frame(RegisterPage)).pack(pady=(0, 10),padx=10)
 
 
     def login_user(self, username, password):
@@ -215,16 +215,16 @@ class RepoPage(tk.Frame):
         self.temp_frame = customtkinter.CTkFrame(master=self.repo_frame, fg_color="transparent")
         self.temp_frame.grid(row=0, column=1, sticky="nsew")
         # create delete button
-        self.delete_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Xóa file", fg_color="#5B9CD4",command=lambda: self.deleteSelectedFile())
+        self.delete_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Xóa file", fg_color="#192655",command=lambda: self.deleteSelectedFile())
         self.delete_button.grid(row=0, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create choose file button 
-        self.add_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Tải file lên repository",fg_color="#5B9CD4", command=lambda: self.chooseFile())
+        self.add_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Tải file lên repository",fg_color="#192655", command=lambda: self.chooseFile())
         self.add_button.grid(row=1, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create update to server button
-        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Cập nhật Server", fg_color="#5B9CD4",command=lambda: self.updateListFile())
+        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Cập nhật Server", fg_color="#192655",command=lambda: self.updateListFile())
         self.update_button.grid(row=2, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create reload repo button
-        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Reload repository", fg_color="#5B9CD4",command=lambda: self.reloadRepo())
+        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Reload repository", fg_color="#192655",command=lambda: self.reloadRepo())
         self.update_button.grid(row=3, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         
         self.greeting_label_var = tk.StringVar()
@@ -253,7 +253,7 @@ class RepoPage(tk.Frame):
         self.search_button.grid(row=5, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create send connect request button
         self.request_button = customtkinter.CTkButton(master=self.peer_frame, border_width=2,
-                                                     command=lambda:self.fileRequest(), text="Gửi yêu cầu kết nối",fg_color="#5B9CD4")
+                                                     command=lambda:self.fileRequest(), text="Gửi yêu cầu kết nối",fg_color="#192655")
         self.request_button.grid(row=6, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
 
         #create CLI
@@ -261,11 +261,11 @@ class RepoPage(tk.Frame):
         self.entry.grid(row=4, column=0, padx=(10, 10), pady=(10, 10), sticky="nsew")
 
         # pcommand_entry = customtkinter.CTkEntry(self)
-        self.main_button_1 = customtkinter.CTkButton(self, text="Enter", command = lambda:self.commandLine(command = self.entry.get()), fg_color="#5B9CD4", border_width=2)
+        self.main_button_1 = customtkinter.CTkButton(self, text="Enter", command = lambda:self.commandLine(command = self.entry.get()), fg_color="#192655", border_width=2)
         #self.main_button_1 = customtkinter.CTkButton(self, text="Enter",command=lambda:self.commandLine(command = pcommand_entry.get()), border_width=2, fg_color="#192655")
 
         self.main_button_1.grid(row=4, column=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
-        self.main_button_2 = customtkinter.CTkButton(self, text="Thoát", command=lambda: self.logout_user(), fg_color="#5B9CD4", border_width=2,font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.main_button_2 = customtkinter.CTkButton(self, text="Thoát", command=lambda: self.logout_user(), fg_color="#192655", border_width=2,font=customtkinter.CTkFont(size=15, weight="bold"))
         self.main_button_2.grid(row=4, column=3, padx=(10, 10), pady=(10, 10), sticky="nsew")
     
     def update_user_greeting(self, username):
