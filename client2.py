@@ -9,6 +9,7 @@ import shutil
 from Base import Base
 import model
 import time
+import hashlib
 import pickle
 # GUI
 import tkinter as tk
@@ -17,7 +18,6 @@ import tkinter.filedialog
 from tkinter import simpledialog
 import tkinter.ttk as ttk
 import customtkinter
-import hashlib
 
 # aid
 
@@ -26,48 +26,39 @@ def MD5_hash(password):
 
 # ----CONSTANT----#
 FORMAT = "utf-8"
-PIECE_SIZE = 1
 BUFFER_SIZE = 2048
 OFFSET = 10000
+PIECE_SIZE = 1
 
 # --------------- #
-# --------------- #
+
 customtkinter.set_default_color_theme("dark-blue")
 
-# popup notification
+# notification popup
 def display_noti(title, content):
     tkinter.messagebox.showinfo(title, content)
 
 ## ====================GUI IMPLEMENT======================##
 class tkinterApp(tk.Tk):
-    # __init__ function for class tkinterApp
+    # hàm khởi tạo tkinterApp class
     def __init__(self, *args, **kwargs):
-        # __init__ function for class Tk
         tk.Tk.__init__(self, *args, **kwargs)
 
-        # creating a container
+        # tạo container
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
         self.chatroom_textCons = None
-
-        # initializing frames to an empty array
         self.frames = {}
 
-        # iterating through a tuple consisting
-        # of the different page layouts
         for F in (StartPage, RegisterPage, LoginPage, RepoPage):
             frame = F(parent=container, controller=self)
-            # initializing frame of that object from
-            # startpage, registerpage, loginpage, chatpage respectively with
-            # for loop
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
             frame.configure(bg='white')
         self.show_frame(StartPage)
-    # to display the current frame passed as parameter
+    # hàm để show page hiện tại
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
@@ -75,24 +66,24 @@ class tkinterApp(tk.Tk):
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        # set color mode
+        # set color modepython
         customtkinter.set_default_color_theme("blue")
         # create title
-        self.page_title = customtkinter.CTkLabel(self, text="File transfer service", font=("Arial Bold", 36))
+        self.page_title = customtkinter.CTkLabel(self, text="FILE TRANFERING SERVICES", font=("Arial Bold", 36))
         self.page_title.pack(padx=10, pady=(80, 10))
         # set port label
-        self.port_label = customtkinter.CTkLabel(self, text="Nhập giá trị port trong khoảng (1024 -> 65535)", font=("Arial", 20))
+        self.port_label = customtkinter.CTkLabel(self, text="Vui lòng nhập giá trị của port", font=("Arial", 20)) #Nhập giá trị port trong khoảng (1024 -> 65535)
         self.port_label.pack(padx=10, pady=10)
         # set port entry
-        self.port_entry = customtkinter.CTkEntry(self, placeholder_text="Nhập port number", border_width=1,width=250)
+        self.port_entry = customtkinter.CTkEntry(self, placeholder_text="port...", border_width=1,width=250)
         self.port_entry.pack(padx=10, pady=10)
         # create a register button
-        self.register_button = customtkinter.CTkButton(self, text="Đăng ký", command=lambda: 
-                                self.enter_app(controller=controller, port=self.port_entry.get(), page=RegisterPage),fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"))
+        self.register_button = customtkinter.CTkButton(self, text="Đăng ký", text_color="#000000", command=lambda: 
+                                self.enter_app(controller=controller, port=self.port_entry.get(), page=RegisterPage),fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12))
         self.register_button.pack(padx=10, pady=10)
         # create a login button
-        self.login_button = customtkinter.CTkButton(self, text="Đăng nhập", command=lambda: 
-                                self.enter_app(controller=controller, port=self.port_entry.get(), page=LoginPage),fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"))
+        self.login_button = customtkinter.CTkButton(self, text="Đăng nhập", text_color="#000000", command=lambda: 
+                                self.enter_app(controller=controller, port=self.port_entry.get(), page=LoginPage),fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12))
         self.login_button.pack(padx=10, pady=10)
 
     def enter_app(self, controller, port, page):
@@ -117,22 +108,17 @@ class StartPage(tk.Frame):
             controller.show_frame(page)
         except:
             self.port_entry.delete(0, customtkinter.END)
-            display_noti("Port Error!",  "Cổng đã được sử dụng hoặc chứa giá trị rỗng")
+            display_noti("Port Error!",  "Cổng đang được sử dụng hoặc chứa giá trị rỗng")
 
 class RegisterPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        customtkinter.set_default_color_theme("blue")
-        # Sign Up Image
-        # signup_pic = ImageTk.PhotoImage(asset.signup_image)
-        # self.signupImg = tkinter.Label(self, image=signup_pic, bg='white')
-        # self.signupImg.image = signup_pic
-        # self.signupImg.place(x=50, y=50)        
+        customtkinter.set_default_color_theme("blue")      
 
         self.frame = customtkinter.CTkFrame(master=self, fg_color="white")
         self.frame.pack(fill='both', expand=True)
 
-        self.title_label = customtkinter.CTkLabel(self.frame, text="Đăng ký tài khoản", font=("Roboto Bold", 32))
+        self.title_label = customtkinter.CTkLabel(self.frame, text="ĐĂNG KÝ", font=("Roboto Bold", 32))
         self.title_label.pack(pady=(80, 10),padx=10)
 
         self.username = customtkinter.CTkLabel(self.frame, text="Tài khoản", font=("Roboto", 14))
@@ -144,13 +130,14 @@ class RegisterPage(tk.Frame):
         self.password.pack(pady=(0),padx=10)
         self.password_entry = customtkinter.CTkEntry(self.frame, placeholder_text="Nhập mật khẩu",  width=250,font=("Roboto", 12), show = '*')
         self.password_entry.pack(pady=(0, 10),padx=10)
-
+        # self.toggle_btn = ttk.Button(self.frame, text="Hiện mật khẩu", command=self.toggle_password)
+        # self.toggle_btn.pack(pady=5)
         # Submit
-        customtkinter.CTkButton(self.frame, text='Đăng ký', fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"),command=lambda: 
+        customtkinter.CTkButton(self.frame, text='Đăng ký', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12),command=lambda: 
                                 self.register_user(self.username_entry.get(), self.password_entry.get())).pack(pady=(0, 10),padx=10)
                                                                                                             
         customtkinter.CTkLabel(self.frame, text="Đã có tài khoản ?",font=("Roboto", 11)).pack(pady=(10, 0),padx=10)
-        customtkinter.CTkButton(self.frame, text='Đăng nhập', fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"),command=lambda: controller.show_frame(LoginPage)).pack(pady=(0, 10),padx=1)
+        customtkinter.CTkButton(self.frame, text='Đăng nhập', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12),command=lambda: controller.show_frame(LoginPage)).pack(pady=(0, 10),padx=1)
 
     def register_user(self, username, password):
         network_peer.name = str(username)
@@ -159,15 +146,17 @@ class RegisterPage(tk.Frame):
         self.username_entry.delete(0, customtkinter.END)
         self.password_entry.delete(0, customtkinter.END)
         network_peer.send_register()
-
+    # def toggle_password(self):
+    #     # Kiểm tra trạng thái hiện tại của ô nhập mật khẩu
+    #     if self.password_entry.cget('show') == '*':
+    #         self.password_entry.config(show='')  # Hiển thị mật khẩu
+    #         self.toggle_btn.config(text="Ẩn mật khẩu")
+    #     else:
+    #         self.password_entry.config(show='*')  # Ẩn mật khẩu
+    #         self.toggle_btn.config(text="Hiện mật khẩu")
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        # Login Image
-        # login_pic = ImageTk.PhotoImage(asset.login_image)
-        # loginImg = tkinter.Label(self, image=login_pic)
-        # loginImg.image = login_pic
-        # loginImg.place(x=50, y=50)
         self.frame = customtkinter.CTkFrame(master=self, fg_color="white")
         self.frame.pack(fill='both', expand=True)
 
@@ -184,11 +173,12 @@ class LoginPage(tk.Frame):
         self.password_entry = customtkinter.CTkEntry(self.frame, placeholder_text="Nhập Mật khẩu",  width=250,font=("Roboto", 12), show = '*')
         self.password_entry.pack(pady=(0, 10),padx=10)
 
-        customtkinter.CTkButton(self.frame, text='Đăng nhập', fg_color="#192655",font=customtkinter.CTkFont(size=12, weight="bold"), command=lambda:
+        customtkinter.CTkButton(self.frame, text='Đăng nhập', text_color="#000000", fg_color="#5B9CD4",font=customtkinter.CTkFont(size=12), command=lambda:
                                 self.login_user(username=self.username_entry.get(), password=self.password_entry.get())).pack(pady=(0, 10),padx=10)
         customtkinter.CTkLabel(self.frame, text="Bạn không có tài khoản ?", font=("Roboto", 11)).pack(pady=(10, 0),padx=10)
-        customtkinter.CTkButton(self.frame, text='Đăng ký', font=customtkinter.CTkFont(size=12, weight="bold"),fg_color="#192655", cursor="hand2", command=lambda: controller.show_frame(RegisterPage)).pack(pady=(0, 10),padx=10)
-    
+        customtkinter.CTkButton(self.frame, text='Đăng ký', text_color="#000000", font=customtkinter.CTkFont(size=12),fg_color="#5B9CD4", cursor="hand2", command=lambda: controller.show_frame(RegisterPage)).pack(pady=(0, 10),padx=10)
+
+
     def login_user(self, username, password):
         network_peer.name = str(username)
         # hash password by MD5 algorithm
@@ -224,22 +214,19 @@ class RepoPage(tk.Frame):
         # create temp frame
         self.temp_frame = customtkinter.CTkFrame(master=self.repo_frame, fg_color="transparent")
         self.temp_frame.grid(row=0, column=1, sticky="nsew")
-        # self.temp_frame.grid_rowconfigure(0, weight=1)
-        # self.temp_frame.grid_columnconfigure(0, weight=1)
-        # self.temp_frame.grid_columnconfigure(1, weight=1)
         # create delete button
-        self.delete_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Xóa file", fg_color="#192655",command=lambda: self.deleteSelectedFile())
+        self.delete_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Xóa file", fg_color="#5B9CD4",command=lambda: self.deleteSelectedFile())
         self.delete_button.grid(row=0, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create choose file button 
-        self.add_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Tải file lên repository",fg_color="#192655", command=lambda: self.chooseFile())
+        self.add_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Tải file lên repository",fg_color="#5B9CD4", command=lambda: self.chooseFile())
         self.add_button.grid(row=1, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create update to server button
-        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Cập nhật Server", fg_color="#192655",command=lambda: self.updateListFile())
+        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Cập nhật Server", fg_color="#5B9CD4",command=lambda: self.updateListFile())
         self.update_button.grid(row=2, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create reload repo button
-        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Reload repository", fg_color="#192655",command=lambda: self.reloadRepo())
+        self.update_button = customtkinter.CTkButton(master=self.temp_frame, border_width=2, text="Reload repository", fg_color="#5B9CD4",command=lambda: self.reloadRepo())
         self.update_button.grid(row=3, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
-
+        
         self.greeting_label_var = tk.StringVar()
         self.greeting_label = customtkinter.CTkLabel(master=self.temp_frame, textvariable=self.greeting_label_var, font=("Roboto", 14))
         self.greeting_label.grid(row=4, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
@@ -259,42 +246,37 @@ class RepoPage(tk.Frame):
         self.peerListBox = tk.Listbox(self.scrollable_peer_frame, width=175, height=20)
         self.peerListBox.grid(row=0, column=1, padx=10, pady=(10, 10))
         # # ####
-        #  29/11
-        # self.search_frame = customtkinter.CTkFrame(self.peer_frame, fg_color="#DBE2EF")
-        # self.search_frame.grid(row=2, column=6, padx=(10, 10), pady=(10, 10), sticky="nsew")
-        # self.search_frame.grid_rowconfigure(0, weight=1)
-        # self.search_frame.grid_columnconfigure(0, weight=1)
+
         self.search_entry = customtkinter.CTkEntry(master=self.peer_frame, placeholder_text="Search...")
         self.search_entry.grid(row=4, column=2,padx=(10, 10), pady=(10, 10), sticky="nsew")
-        self.search_button = customtkinter.CTkButton(master=self.peer_frame, text="Search", border_width=2, command=lambda: self.get_users_share_file_from_entry(),fg_color="#192655")
+        self.search_button = customtkinter.CTkButton(master=self.peer_frame, text="Tìm kiếm", border_width=2, command=lambda: self.get_users_share_file_from_entry(),fg_color="#192655")
         self.search_button.grid(row=5, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         # create send connect request button
         self.request_button = customtkinter.CTkButton(master=self.peer_frame, border_width=2,
-                                                     command=lambda:self.fileRequest(), text="Gửi yêu cầu kết nối",fg_color="#192655")
+                                                     command=lambda:self.fileRequest(), text="Gửi yêu cầu kết nối",fg_color="#5B9CD4")
         self.request_button.grid(row=6, column=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
-        
+
         #create CLI
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Command...")
         self.entry.grid(row=4, column=0, padx=(10, 10), pady=(10, 10), sticky="nsew")
-        self.main_button_1 = customtkinter.CTkButton(self, text="Enter", command = lambda:self.commandLine(command = self.entry.get()), fg_color="#192655", border_width=2)
+
+        # pcommand_entry = customtkinter.CTkEntry(self)
+        self.main_button_1 = customtkinter.CTkButton(self, text="Enter", command = lambda:self.commandLine(command = self.entry.get()), fg_color="#5B9CD4", border_width=2)
+        #self.main_button_1 = customtkinter.CTkButton(self, text="Enter",command=lambda:self.commandLine(command = pcommand_entry.get()), border_width=2, fg_color="#192655")
+
         self.main_button_1.grid(row=4, column=1, padx=(10, 10), pady=(10, 10), sticky="nsew")
-        self.main_button_2 = customtkinter.CTkButton(self, text="Đăng xuất", command=lambda: self.logout_user(), fg_color="#192655", border_width=2,font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.main_button_2 = customtkinter.CTkButton(self, text="Thoát", command=lambda: self.logout_user(), fg_color="#5B9CD4", border_width=2,font=customtkinter.CTkFont(size=15, weight="bold"))
         self.main_button_2.grid(row=4, column=3, padx=(10, 10), pady=(10, 10), sticky="nsew")
-
-
+    
     def update_user_greeting(self, username):
         """Cập nhật nhãn chào mừng với tên người dùng."""
         greeting = f"Xin chào, {username}!"
         print(greeting)
         self.greeting_label_var.set(greeting)
-
+        
     def logout_user(self):
         network_peer.send_logout_request()
         app.show_frame(StartPage)
-
-    def quit_user(self):
-        network_peer.send_logout_request()
-        app.destroy()
     
     def commandLine(self, command):
         parts = command.split()
@@ -342,10 +324,10 @@ class RepoPage(tk.Frame):
 
     def sendtoServerPath(self, file_path):
         # create a folder named "repo" in this folder
-        if not os.path.exists("serverRepo"):
-            os.makedirs("serverRepo")
-        destination = os.path.join(os.getcwd(), "serverRepo")
-        return shutil.move(file_path, destination)    
+        if not os.path.exists("serverRepo2"):
+            os.makedirs("serverRepo2")
+        destination = os.path.join(os.getcwd(), "serverRepo2")
+        return shutil.copy(file_path, destination)
 
     def chooseFile(self):
         file_path = tkinter.filedialog.askopenfilename(initialdir="/",
@@ -359,13 +341,13 @@ class RepoPage(tk.Frame):
             # popup = simpledialog.askstring("Input","Nhập tên file trên Localrepo",parent = self)
             self.fileListBox.insert(0,file_name)
             tkinter.messagebox.showinfo(
-                "Local Repository", '{} has been added to localrepo2!'.format(file_name))
+                "Local Repository", '{} has been added to localRepo2!'.format(file_name))
             self.sendtoLocalPath(file_name)
             
     def chooseFilefromPath(self, file_path):
             self.fileListBox.insert(0,file_path)
             tkinter.messagebox.showinfo(
-                "Local Repository", '{} has been added to localrepo2!'.format(file_path))
+                "Local Repository", '{} has been added to localRepo2!'.format(file_path))
             
     def fileRequest(self):
         peer_info = self.peerListBox.get(tk.ANCHOR)
@@ -375,7 +357,7 @@ class RepoPage(tk.Frame):
     def updateListFile(self):
         self.fileNameServer = simpledialog.askstring("Input","Nhập tên file lưu trên Server", parent = self)
         file_path = self.fileListBox.get(tk.ANCHOR)
-        file_path = self.sendtoServerPath(file_path)
+        self.sendtoServerPath(file_path)
         file_size = os.path.getsize(file_path)
         num_pieces = (file_size + PIECE_SIZE - 1) // PIECE_SIZE
         # add status
@@ -387,8 +369,10 @@ class RepoPage(tk.Frame):
         self.fileListBox.insert(0,self.fileNameServer + "(" + file_path +")")
 
     def updateListFilefromFetch(self, file_name, file_name_server, status = []):
-        file_path = os.path.join(os.getcwd(), file_name)
-        file_path = self.sendtoServerPath(file_path)
+        file_path = os.path.join(os.getcwd(), "localRepo2")
+        file_path = os.path.join(file_path, file_name)
+        self.sendtoServerPath(file_path)
+        # add status
         network_peer.updateToServer(file_name_server, file_path, status)
         self.fileListBox.delete(tk.ANCHOR)
         self.fileListBox.insert(0,file_name_server + "(" + file_name +")")
@@ -412,30 +396,26 @@ class RepoPage(tk.Frame):
             self.fileListBox.insert(tk.END, file_path)
         network_peer.reloadRepoList()
 
+
 # ------ end of GUI ------- #
 
 class NetworkPeer(Base):
-    def __init__(self, serverhost='localhost', serverport=30000, server_info=('192.168.31.170', 40000)):
+    def __init__(self, serverhost='192.168.31.170', serverport=30000, server_info=('192.168.31.170', 40000)):
         super(NetworkPeer, self).__init__(serverhost, serverport)
 
         # init host and port of central server
         self.server_info = server_info
-
         # peer name
         self.name = ""
         # peer password
         self.password = ""
-
         # all peers it can connect (network peers)
         self.connectable_peer = {}
-
         # peers it has connected (friend)
         self.friendlist = {}
-
         self.message_format = '{peername}: {message}'
         # file buffer
         self.file_buf = []
-
         # define handlers for received message of network peer
         handlers = {
             'REGISTER_SUCCESS': self.register_success,
@@ -449,7 +429,6 @@ class NetworkPeer(Base):
         }
         for msgtype, function in handlers.items():
             self.add_handler(msgtype, function)
-
     ## ==========implement protocol for user registration - network peer==========##
     def send_register(self):
         """ Send a request to server to register peer's information. """
@@ -493,7 +472,7 @@ class NetworkPeer(Base):
         app.geometry("1100x600")
         app.resizable(False, False)
         app.show_frame(RepoPage)
-        app.frames[RepoPage].update_user_greeting(self.name)
+        app.frames[RepoPage].update_user_greeting(self.name) 
 
     def login_error(self, msgdata):
         """ Processing received message from server: Login failed on the server. """
@@ -519,7 +498,6 @@ class NetworkPeer(Base):
         }
         self.client_send(self.server_info, msgtype='PEER_SEARCH', msgdata=peer_info)
 
-
     # Modify your get_users_share_file function to check if the list is empty and call file_not_found_notification
     def get_users_share_file(self, msgdata):
         shareList = msgdata.get('online_user_list_have_file', {})
@@ -532,8 +510,11 @@ class NetworkPeer(Base):
             peer_host, peer_port = data
             info = f"{peername},{peer_host},{peer_port}"
             if peername == rerest:
-                info = f"rerest - " + info
+                info = f"rerest," + info
+            else:
+                info = f"non-rerest," + info
             app.frames[RepoPage].peerListBox.insert(0, info)
+                
 
 
     def reloadRepoList(self):
@@ -542,21 +523,11 @@ class NetworkPeer(Base):
         for file in fileList:
             app.frames[RepoPage].fileListBox.insert(0,file)
 
-    # def not_get_users_share_file(self, msgdata):
-    #     """ Processing received message from server:
-    #         Output username of all peers that have file which client is finding."""
-    #     self.connectable_peer.clear()
-    #     for key, value in msgdata['online_user_list_have_file'].items():
-    #         self.connectable_peer[key] = tuple(value)
-    #     if self.name in self.connectable_peer:
-    #         self.connectable_peer.pop(self.name)
-
-    ## ===========================================================##
 
     ## ==========implement protocol for file request==========##
     def send_request(self, peerinfo, filename):
         """ Send a file request to an online user. """
-        peerhost, peerport = peerinfo.split(',')
+        mess, peername, peerhost, peerport = peerinfo.split(',')
         peer = (peerhost, int(peerport))
         data = {
             'peername': self.name,
@@ -588,10 +559,6 @@ class NetworkPeer(Base):
             # display_noti("Yêu cầu file được chấp nhận.",
             #              "Gửi file!")
             self.friendlist[peername] = (host, port)
-            # destination = os.path.join(os.getcwd(), "serverRepo")
-            # file_path = tkinter.filedialog.askopenfilename(initialdir=destination,
-            #                                            title="Select a File",
-            #                                            filetypes=(("All files", "*.*"),))
             file_path = model.get_path_by_filename(self.name, filename)
             file_name = os.path.basename(file_path)
             msg_box = tkinter.messagebox.askquestion('File Explorer', 'Bạn có chắc muốn gửi file {} đến user: {}?'.format(file_name, peername),
@@ -620,6 +587,8 @@ class NetworkPeer(Base):
     def file_refuse(self, msgdata):
         """ Processing received refuse chat request message from peer. """
         display_noti("Thông báo", 'Yêu cầu file bị từ chối!')
+    ## ===========================================================##
+
 
     ## ==========implement protocol for file tranfering==========##
         
@@ -632,7 +601,7 @@ class NetworkPeer(Base):
         else:
             filename = os.path.basename(file_path)
             try:
-                def send_piece(piece_data, piece_num, host='localhost', port=5001 ):
+                def send_piece(piece_data, piece_num, host='localhost', port=40000 ):
                     print(f"host{host}:{port}")
                     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     client_socket.connect((host, port))
@@ -688,6 +657,7 @@ class NetworkPeer(Base):
                             num_pieces_have += 1
                 print(f"status: {status}, type: {type(status)}")
                 # Change the path to localRepo
+                time.sleep(0.1)
                 with open(file_path, "rb") as file:
                     threads=[]
                     for i in range(num_pieces - num_pieces_have):
@@ -705,7 +675,7 @@ class NetworkPeer(Base):
                 display_noti("Error", f"File transfer failed: {str(e)}")
             finally:
                 file_sent.close()
-            
+    
     def recv_file_content(self):
         def handler_func(conn, addr, file, status):        
             # kich thuoc manh
@@ -759,7 +729,7 @@ class NetworkPeer(Base):
                 if i == 1:
                     num_pieces_have += 1
         print(f"status: {status}")
-        localRepo_path = os.path.join(os.getcwd(), "localRepo")
+        localRepo_path = os.path.join(os.getcwd(), "localRepo2")
         os.makedirs(localRepo_path, exist_ok=True)
         file_path = os.path.join(localRepo_path, file_name)
             # Open the file with the correct path for writing binary data
@@ -786,6 +756,8 @@ class NetworkPeer(Base):
         recv_file_t = threading.Thread(target=network_peer.recv_file_content)
         recv_file_t.daemon = True
         recv_file_t.start()
+        
+
     ## ===========================================================##
     
     ## ==========implement protocol for log out & exit ===================##
@@ -826,7 +798,7 @@ class NetworkPeer(Base):
 # ------ app run ---------- #
 if __name__ == "__main__":
     app = tkinterApp()
-    app.title('File transfer service')
+    app.title('Simple Torrent-like Application')
     app.geometry("1024x600")
     app.resizable(False, False)
 

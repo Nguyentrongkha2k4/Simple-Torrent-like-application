@@ -293,7 +293,7 @@ class RepoPage(tk.Frame):
                 status = []
                 for i in range(num_pieces):
                     status.append(1)
-                network_peer.updateToServer(file_name, file_path)
+                network_peer.updateToServer(file_name, file_path, status)
                 self.fileListBox.insert(0,file_name + "(" + file_path +")")
                 self.sendtoServerPath(file_path)
                 
@@ -327,11 +327,7 @@ class RepoPage(tk.Frame):
         if not os.path.exists("serverRepo"):
             os.makedirs("serverRepo")
         destination = os.path.join(os.getcwd(), "serverRepo")
-        try:
-            return shutil.move(file_path, destination)
-        except shutil.Error as e:
-            print(f"Error moving file: {e}")
-            # Implement additional logic like logging or user notification    
+        return shutil.copy(file_path, destination)
 
     def chooseFile(self):
         file_path = tkinter.filedialog.askopenfilename(initialdir="/",
@@ -368,12 +364,13 @@ class RepoPage(tk.Frame):
         status = []
         for i in range(num_pieces):
             status.append(1)
-        network_peer.updateToServer(self.fileNameServer, file_path)
+        network_peer.updateToServer(self.fileNameServer, file_path, status)
         self.fileListBox.delete(tk.ANCHOR)
         self.fileListBox.insert(0,self.fileNameServer + "(" + file_path +")")
 
     def updateListFilefromFetch(self, file_name, file_name_server, status = []):
-        file_path = os.path.join(os.getcwd(), file_name)
+        file_path = os.path.join(os.getcwd(), "localRepo")
+        file_path = os.path.join(file_path, file_name)
         self.sendtoServerPath(file_path)
         # add status
         network_peer.updateToServer(file_name_server, file_path, status)
@@ -513,7 +510,9 @@ class NetworkPeer(Base):
             peer_host, peer_port = data
             info = f"{peername},{peer_host},{peer_port}"
             if peername == rerest:
-                info = f"rerest - " + info
+                info = f"rerest," + info
+            else:
+                info = f"non-rerest," + info
             app.frames[RepoPage].peerListBox.insert(0, info)
                 
 
@@ -528,7 +527,7 @@ class NetworkPeer(Base):
     ## ==========implement protocol for file request==========##
     def send_request(self, peerinfo, filename):
         """ Send a file request to an online user. """
-        peerhost, peerport = peerinfo.split(',')
+        mess, peername, peerhost, peerport = peerinfo.split(',')
         peer = (peerhost, int(peerport))
         data = {
             'peername': self.name,
@@ -658,6 +657,7 @@ class NetworkPeer(Base):
                             num_pieces_have += 1
                 print(f"status: {status}, type: {type(status)}")
                 # Change the path to localRepo
+                time.sleep(0.1)
                 with open(file_path, "rb") as file:
                     threads=[]
                     for i in range(num_pieces - num_pieces_have):

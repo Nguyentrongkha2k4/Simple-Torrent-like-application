@@ -1,0 +1,2 @@
+pymongo             == 4.10.1
+customtkinter       == 5.2.2
