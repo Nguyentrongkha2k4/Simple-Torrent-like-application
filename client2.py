@@ -311,7 +311,7 @@ class RepoPage(tk.Frame):
                 status = []
                 for i in range(num_pieces):
                     status.append(1)
-                network_peer.updateToServer(file_name, file_path)
+                network_peer.updateToServer(file_name, file_path, status)
                 self.fileListBox.insert(0,file_name + "(" + file_path +")")
                 self.sendtoServerPath(file_path)
                 
@@ -810,7 +810,7 @@ class NetworkPeer(Base):
         self.client_send(self.server_info,
                          msgtype='DELETE_FILE', msgdata=peer_info)
         
-    def updateToServer(self, file_name, file_path, status):
+    def updateToServer(self, file_name, file_path, status = []):
         """ Upload repo to server. """
         peer_info = {
             'peername': self.name,

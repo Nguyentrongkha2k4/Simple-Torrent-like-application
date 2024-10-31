@@ -92,6 +92,8 @@ class App(customtkinter.CTk):
 
             ping_button = customtkinter.CTkButton(master=self.scrollable_clients_frame, text="Ping", command = lambda username = username: self.ping_client(username),fg_color="#192655")
             ping_button.grid(row=i, column=2, padx=10, pady=(0, 20))
+            ping_button = customtkinter.CTkButton(master=self.scrollable_clients_frame, text="Xoá", command = lambda username = username: self.delete_user(username),fg_color="#192655")
+            ping_button.grid(row=i, column=3, padx=10, pady=(0, 20))
 
         # create CLI
 
@@ -159,7 +161,41 @@ class App(customtkinter.CTk):
         else:
             status_message = f"{username} không trực tuyến."
         tkinter.messagebox.showinfo("Trạng thái người dùng:", status_message)
+    
+    def delete_user(self, username):
+        online_list = get_onl_users()
+        if username in online_list:
+            status_message = f"{username} đang online không thể xóa."
+        else:
+            delete_user(username)
+            status_message = f"{username} đã xóa."
+        tkinter.messagebox.showinfo("Trạng thái người dùng:", status_message)
+        self.refresh_frame()
+    # refesh frame after deleted user
+    def refresh_frame(self):
+        self.scrollable_clients_frame.destroy()
+        self.scrollable_clients_frame = customtkinter.CTkScrollableFrame(self, label_text="Clients",fg_color="#DBE2EF",label_text_color="#3F72AF",label_font=("Clients",25))
+        self.scrollable_clients_frame.grid(row = 1, column = 0, columnspan = 2, rowspan=4, padx=(10, 10), pady=(10, 10), sticky="nsew")
+        self.scrollable_clients_frame.grid_columnconfigure((0), weight=1)
+        self.scrollable_clients_names = get_all_users()
+        self.scrollable_clients_labels = []
+            
+        ## to do: modify range to number of current clients
+        for i, username in enumerate(self.scrollable_clients_names):
+            client_label = customtkinter.CTkLabel(master=self.scrollable_clients_frame, text=username)
+            client_label.grid(row=i, column=0, padx=10, pady=(0, 20))
+            self.scrollable_clients_labels.append(client_label)
 
+            view_button = customtkinter.CTkButton(master=self.scrollable_clients_frame, text="View Files", command=lambda username=username: self.view_client_files(username),fg_color="#192655")
+            view_button.grid(row=i, column=1, padx=10, pady=(0, 20))
+            self.files_list = None
+
+            ping_button = customtkinter.CTkButton(master=self.scrollable_clients_frame, text="Ping", command = lambda username = username: self.ping_client(username),fg_color="#192655")
+            ping_button.grid(row=i, column=2, padx=10, pady=(0, 20))
+            ping_button = customtkinter.CTkButton(master=self.scrollable_clients_frame, text="Xoá", command = lambda username = username: self.delete_user(username),fg_color="#192655")
+            ping_button.grid(row=i, column=3, padx=10, pady=(0, 20))
+    
+        
 
 class CentralServer(Base):
     def __init__(self, serverhost='localhost', serverport=40000):
