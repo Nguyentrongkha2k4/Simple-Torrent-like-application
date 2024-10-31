@@ -136,9 +136,8 @@ class RegisterPage(tk.Frame):
         customtkinter.CTkButton(self.frame, text='Đăng ký', fg_color="#192655",font=customtkinter.CTkFont(size=12),command=lambda: 
                                 self.register_user(self.username_entry.get(), self.password_entry.get())).pack(pady=(0, 10),padx=10)
                                                                                                             
-        customtkinter.CTkLabel(self.frame, text="Đã có tài khoản ?",font=("Roboto", 11)).pack(pady=(10, 0),padx=10)
+        customtkinter.CTkLabel(self.frame, text="Đã có tài khoản ?",font=("Roboto", 12)).pack(pady=(10, 0),padx=10)
         customtkinter.CTkButton(self.frame, text='Đăng nhập', fg_color="#192655",font=customtkinter.CTkFont(size=12),command=lambda: controller.show_frame(LoginPage)).pack(pady=(0, 10),padx=1)
-
     def register_user(self, username, password):
         network_peer.name = str(username)
         # hash password by MD5 algorithm
@@ -160,7 +159,7 @@ class LoginPage(tk.Frame):
         self.frame = customtkinter.CTkFrame(master=self, fg_color="white")
         self.frame.pack(fill='both', expand=True)
 
-        self.title_label = customtkinter.CTkLabel(self.frame, text="Đăng nhập", font=("Roboto Bold", 32))
+        self.title_label = customtkinter.CTkLabel(self.frame, text="ĐĂNG NHẬP", font=("Roboto Bold", 32))
         self.title_label.pack(pady=(80, 10),padx=10)
 
         self.username = customtkinter.CTkLabel(self.frame, text="Tài khoản", font=("Roboto", 14))
@@ -175,7 +174,7 @@ class LoginPage(tk.Frame):
 
         customtkinter.CTkButton(self.frame, text='Đăng nhập', fg_color="#192655",font=customtkinter.CTkFont(size=12), command=lambda:
                                 self.login_user(username=self.username_entry.get(), password=self.password_entry.get())).pack(pady=(0, 10),padx=10)
-        customtkinter.CTkLabel(self.frame, text="Bạn không có tài khoản ?", font=("Roboto", 11)).pack(pady=(10, 0),padx=10)
+        customtkinter.CTkLabel(self.frame, text="Bạn không có tài khoản ?", font=("Roboto", 12)).pack(pady=(10, 0),padx=10)
         customtkinter.CTkButton(self.frame, text='Đăng ký', font=customtkinter.CTkFont(size=12),fg_color="#192655", cursor="hand2", command=lambda: controller.show_frame(RegisterPage)).pack(pady=(0, 10),padx=10)
 
 
@@ -296,7 +295,6 @@ class RepoPage(tk.Frame):
                 network_peer.updateToServer(file_name, file_path, status)
                 self.fileListBox.insert(0,file_name + "(" + file_path +")")
                 self.sendtoServerPath(file_path)
-                
             else:
                 message = "Lệnh không hợp lệ vui lòng nhập lại!"
                 tkinter.messagebox.showinfo(message)
@@ -483,7 +481,7 @@ class NetworkPeer(Base):
     ## ==========implement protocol for getting online user list who have file that client find==========##
     def file_not_found_notification(self, filename):
         """Notify the user that the file was not found."""
-        display_noti('Thông báo', f'File "{filename}" không tồn tại.')
+        display_noti('Thông báo', f'File "{filename}" không tồn tại trên hệ thống.')
         print(f'File "{filename}" not found.')
 
     # Modify your existing send_listpeer function to call file_not_found_notification
