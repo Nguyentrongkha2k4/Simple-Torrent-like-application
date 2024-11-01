@@ -210,7 +210,7 @@ class App(customtkinter.CTk):
         
 
 class CentralServer(Base):
-    def __init__(self, serverhost='localhost', serverport=40000):
+    def __init__(self, serverhost='192.168.154.162', serverport=40000):
         super(CentralServer, self).__init__(serverhost, serverport)
 
         # get registered user list
@@ -376,7 +376,7 @@ app.protocol("WM_DELETE_WINDOW", handle_on_closing_event)
 #     server.input_recv()
 def run_server():
     
-    server = CentralServer()
+    server = CentralServer('0.0.0.0', 40000)
     server.input_recv()
         
 

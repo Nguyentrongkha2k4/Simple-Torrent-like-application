@@ -9,8 +9,9 @@ BUFFER_SIZE = 2048
 class Base():
     def __init__(self, serverhost, serverport=10000, listen_num=100):
         # host and listening port of network peers/central server
-        hostname = socket.gethostname()   
-        self.serverhost = socket.gethostbyname(hostname)  
+        # hostname = socket.gethostname()   
+        # self.serverhost = socket.gethostbyname(hostname)  
+        self.serverhost = serverhost
         self.serverport = int(serverport)
         
         # create server TCP socket (for listening)
@@ -18,7 +19,7 @@ class Base():
         # bind the socket to our local address
         self.socket.bind((self.serverhost, self.serverport))
         self.socket.listen(listen_num)
-        
+        print(f"listening at {serverhost} {serverport}")
         # peerlist: dict with key is peer name and value is tuple (host,port) 
         # Child class CentralServer: connected peers of a network peer
         # Child class NetworkPeer: list of registered peers managed by central server
@@ -66,6 +67,7 @@ class Base():
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             # request connection
+            print(address)
             s.connect(address)
         except ConnectionRefusedError:
             print('Connection Error: Your Peer Refused')

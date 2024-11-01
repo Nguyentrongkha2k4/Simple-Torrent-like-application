@@ -233,12 +233,12 @@ class RepoPage(tk.Frame):
 
         ####
 
-        self.peer_frame = customtkinter.CTkFrame(self, fg_color="#192655",corner_radius=10)
+        self.peer_frame = customtkinter.CTkFrame(self, fg_color="#DBE2EF",corner_radius=10)
         self.peer_frame.grid(row=2, column=3,sticky="nsew",padx=(10,10),pady=(10,10))
         self.peer_frame.grid_rowconfigure(1, weight=1)
         self.peer_frame.grid_columnconfigure(1, weight=1)   
         # # ###
-        self.scrollable_peer_frame = customtkinter.CTkScrollableFrame(self, label_text="Peer List",label_text_color="#3F72AF",fg_color="#192655")
+        self.scrollable_peer_frame = customtkinter.CTkScrollableFrame(self, label_text="Peer List",label_text_color="#3F72AF",fg_color="#DBE2EF")
         self.scrollable_peer_frame.grid(row=2, column=0,columnspan=2, padx=(10, 10), pady=(10, 10), sticky="nsew")
         self.scrollable_peer_frame.grid_rowconfigure(0, weight=1)
         self.scrollable_peer_names = []
@@ -398,7 +398,7 @@ class RepoPage(tk.Frame):
 # ------ end of GUI ------- #
 
 class NetworkPeer(Base):
-    def __init__(self, serverhost='192.168.31.170', serverport=30000, server_info=('192.168.31.170', 40000)):
+    def __init__(self, serverhost='192.168.154.162', serverport=30000, server_info=('192.168.31.170', 40000)):
         super(NetworkPeer, self).__init__(serverhost, serverport)
 
         # init host and port of central server
@@ -599,7 +599,7 @@ class NetworkPeer(Base):
         else:
             filename = os.path.basename(file_path)
             try:
-                def send_piece(piece_data, piece_num, host='localhost', port=40000 ):
+                def send_piece(piece_data, piece_num, host='192.168.154.162', port=40000 ):
                     print(f"host{host}:{port}")
                     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     client_socket.connect((host, port))
